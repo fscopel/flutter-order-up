@@ -31,8 +31,7 @@ class LoginScreen extends StatelessWidget {
                 );
 
                 // Once signed in, return the UserCredential
-                var credentials = await FirebaseAuth.instance
-                    .signInWithCredential(credential);
+                await FirebaseAuth.instance.signInWithCredential(credential);
 
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     '/homepage', (Route<dynamic> route) => false);
@@ -55,7 +54,7 @@ class LoginScreen extends StatelessWidget {
                           result.accessToken!.token);
 
                   // Once signed in, return the UserCredential
-                  var userCredentials = await FirebaseAuth.instance
+                  await FirebaseAuth.instance
                       .signInWithCredential(facebookAuthCredential);
 
                   Navigator.of(context).pushNamedAndRemoveUntil(

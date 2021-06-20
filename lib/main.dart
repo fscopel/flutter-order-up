@@ -7,23 +7,21 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-
-  runApp(MainApp(auth: auth));
+  runApp(MainApp());
 }
 
-class MainApp extends StatelessWidget {
-  final FirebaseAuth auth;
-  bool isUserSignedin = false;
-  MainApp({required this.auth, Key? key}) : super(key: key) {
-    auth.authStateChanges().listen((User? user) {
-      if (user == null) {
-        print('User is currently signed out!');
-      } else {
-        print('User is signed in!');
-        isUserSignedin = true;
-      }
-    });
+class MainApp extends StatefulWidget {
+  MainApp({Key? key}) : super(key: key);
+
+  @override
+  _MainAppState createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+  bool isUserSignedIn = false;
+
+  _MainAppState() {
+    isUserSignedIn = FirebaseAuth.instance.currentUser != null;
   }
 
   @override
@@ -31,7 +29,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(primaryColor: Colors.red[900]),
       title: 'OrderUp!',
-      initialRoute: isUserSignedin ? '/homepage' : '/loginscreen',
+      initialRoute: isUserSignedIn ? '/homepage' : '/loginscreen',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
         '/loginscreen': (context) => LoginScreen(),
