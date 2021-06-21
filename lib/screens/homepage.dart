@@ -20,7 +20,11 @@ class HomePage extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
                 ),
-                child: Text('Drawer Header'),
+                child: Column(
+                  children: [
+                    Image.network()
+                  ],
+                ),
               ),
               ListTile(
                 title: Text('Item 1'),

@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:flutter_order_up/models/user.dart' as User;
+import 'package:flutter_order_up/services/cloudstore_service.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -31,7 +33,22 @@ class LoginScreen extends StatelessWidget {
                 );
 
                 // Once signed in, return the UserCredential
-                await FirebaseAuth.instance.signInWithCredential(credential);
+                var uc = await FirebaseAuth.instance
+                    .signInWithCredential(credential);
+
+                var uDb = UserDatabase();
+
+                var user = await uDb.getUser(uc.user!.uid);
+
+                if (user.uid == null) {
+                  UserDatabase()
+                    ..addUser(User.User.fromValues(
+                        fullName: uc.user!.displayName ?? '',
+                        email: uc.user!.email ?? '',
+                        provider: uc.credential!.providerId,
+                        photoUrl: uc.user!.photoURL,
+                        uid: uc.user!.uid));
+                }
 
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     '/homepage', (Route<dynamic> route) => false);
